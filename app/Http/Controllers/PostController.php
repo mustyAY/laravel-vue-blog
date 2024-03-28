@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -13,15 +14,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $post = Post::where('status', 'published')->paginate(10);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json($post);
     }
 
     /**
@@ -29,7 +24,16 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $photo = $request->file('photo')?->storePublicly('post-pictures');
+
+        $post = new Post($request->safe()->all());
+        $post->photo_path = $photo;
+
+        $request->user()->posts()->save($post);
+
+//        $post->refresh();
+
+        return response()->json($post, 201);
     }
 
     /**
@@ -37,15 +41,12 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
-    }
+        if ($post->status !== 'published') return response()->json([
+            'status' => 'error',
+            'message' => 'Post Not Found',
+        ], 404);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
+        return response()->json($post);
     }
 
     /**
@@ -53,7 +54,16 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $photo = $request->file('photo')?->storePublicly('post-pictures');
+        $oldPhotoPath = $post->photo_path;
+        if ($photo) {
+            Storage::delete($oldPhotoPath);
+            $post->photo_path = $photo;
+        }
+
+        $post->update($request->safe()->all());
+
+        return response()->json($post);
     }
 
     /**
@@ -61,6 +71,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Post Deleted Successfully!'
+        ], 200);
     }
 }
