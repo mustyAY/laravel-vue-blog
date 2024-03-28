@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class StorePostRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class StorePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -33,7 +34,12 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string'],
+            'slug' => ['required', 'string', 'unique:posts'],
+            'description' => ['required', 'string'],
+            'body' => ['required', 'string'],
+            'photo' => ['nullable', 'image', 'dimensions:min_width=100,min_height=100,max_width=1080,max_height=1080', 'max:512'],
+            'status' => ['nullable', Rule::in(['draft', 'published'])],
         ];
     }
 }

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -12,9 +15,16 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        $post = Post::where('status', 'published')->paginate(10);
+        $post = Post::where('status', 'published')->orderBy('created_at', 'DESC')->paginate(10);
+
+        return response()->json($post);
+    }
+
+    public function userPosts(Request $request): JsonResponse
+    {
+        $post = $request->user()->posts()->orderBy('created_at', 'DESC')->paginate(10);
 
         return response()->json($post);
     }
@@ -22,14 +32,17 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request): JsonResponse
     {
         $photo = $request->file('photo')?->storePublicly('post-pictures');
 
         $post = new Post($request->safe()->all());
         $post->photo_path = $photo;
 
-        $request->user()->posts()->save($post);
+        $user = User::find(13);
+
+//        $request->user()->posts()->save($post);
+        $user->posts()->save($post);
 
 //        $post->refresh();
 
@@ -49,10 +62,15 @@ class PostController extends Controller
         return response()->json($post);
     }
 
+    public function userPost(UpdatePostRequest $request, Post $post)
+    {
+        return response()->json($post);
+    }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): JsonResponse
     {
         $photo = $request->file('photo')?->storePublicly('post-pictures');
         $oldPhotoPath = $post->photo_path;
@@ -69,7 +87,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(UpdatePostRequest $request, Post $post): JsonResponse
     {
         $post->delete();
         return response()->json([
