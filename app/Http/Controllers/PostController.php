@@ -8,10 +8,22 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Storage;
 
-class PostController extends Controller
+class PostController extends Controller implements HasMiddleware
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth:sanctum', except: ['index', 'show']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +34,7 @@ class PostController extends Controller
         return response()->json($post);
     }
 
-    public function userPosts(Request $request): JsonResponse
+    public function userPosts(UpdatePostRequest $request): JsonResponse
     {
         $post = $request->user()->posts()->orderBy('created_at', 'DESC')->paginate(10);
 
@@ -39,10 +51,7 @@ class PostController extends Controller
         $post = new Post($request->safe()->all());
         $post->photo_path = $photo;
 
-        $user = User::find(13);
-
-//        $request->user()->posts()->save($post);
-        $user->posts()->save($post);
+        $request->user()->posts()->save($post);
 
 //        $post->refresh();
 

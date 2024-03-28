@@ -14,7 +14,7 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->id === $this->post->user_id || $this->user()->role === 'admin';
+        return $this->user()->id === $this->post?->user_id || $this->user()->role === 'admin';
     }
 
     /**
