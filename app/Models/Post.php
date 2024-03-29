@@ -19,11 +19,12 @@ class Post extends Model
       'status',
     ];
 
-
+    protected $with = ['author:id,name'];
+    protected $withCount = ['likes'];
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function likes()

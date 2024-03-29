@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Like;
-use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Models\User;
+use App\Models\Like;
+use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class PostController extends Controller implements HasMiddleware
 {
@@ -30,14 +30,22 @@ class PostController extends Controller implements HasMiddleware
      */
     public function index(Request $request): JsonResponse
     {
-        $post = Post::withCount('likes')->where('status', 'published')->orderBy('created_at', 'DESC')->paginate(10);
+        $post = Post::select(['id', 'user_id', 'title', 'slug', 'description', 'status', 'photo_path'])
+            ->withCount('likes')
+            ->where('status', 'published')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10);
 
         return response()->json($post);
     }
 
     public function userPosts(Request $request): JsonResponse
     {
-        $post = $request->user()->posts()->withCount('likes')->orderBy('created_at', 'DESC')->paginate(10);
+        $post = $request->user()->posts()
+            ->select(['id', 'user_id', 'title', 'slug', 'description', 'status'])
+            ->withCount('likes')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10);
 
         return response()->json($post);
     }
@@ -72,14 +80,12 @@ class PostController extends Controller implements HasMiddleware
             $liked = $request->user()->likes()->where('post_id', $post->id)->exists();
             $post->setAttribute('liked', $liked);
         }
-        $post->loadCount('likes');
 
         return response()->json($post);
     }
 
     public function userPost(UpdatePostRequest $request, Post $post)
     {
-        $post->loadCount('likes');
         return response()->json($post);
     }
 
@@ -123,7 +129,7 @@ class PostController extends Controller implements HasMiddleware
                 'status' => 'success',
                 'message' => 'Post liked successfully'
             ], 200);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Post has already been liked'
@@ -131,6 +137,7 @@ class PostController extends Controller implements HasMiddleware
         }
 
     }
+
     public function unlike(Request $request, Post $post)
     {
         try {
@@ -139,7 +146,7 @@ class PostController extends Controller implements HasMiddleware
                 'status' => 'success',
                 'message' => 'Post unliked successfully'
             ], 200);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Post has already been unliked'
