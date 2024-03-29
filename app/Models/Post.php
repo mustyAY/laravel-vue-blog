@@ -19,6 +19,8 @@ class Post extends Model
       'status',
     ];
 
+
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);

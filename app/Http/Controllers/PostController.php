@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -27,16 +28,16 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $post = Post::where('status', 'published')->orderBy('created_at', 'DESC')->paginate(10);
+        $post = Post::withCount('likes')->where('status', 'published')->orderBy('created_at', 'DESC')->paginate(10);
 
         return response()->json($post);
     }
 
-    public function userPosts(UpdatePostRequest $request): JsonResponse
+    public function userPosts(Request $request): JsonResponse
     {
-        $post = $request->user()->posts()->orderBy('created_at', 'DESC')->paginate(10);
+        $post = $request->user()->posts()->withCount('likes')->orderBy('created_at', 'DESC')->paginate(10);
 
         return response()->json($post);
     }
@@ -61,18 +62,24 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
         if ($post->status !== 'published') return response()->json([
             'status' => 'error',
             'message' => 'Post Not Found',
         ], 404);
+        if ($request->user()) {
+            $liked = $request->user()->likes()->where('post_id', $post->id)->exists();
+            $post->setAttribute('liked', $liked);
+        }
+        $post->loadCount('likes');
 
         return response()->json($post);
     }
 
     public function userPost(UpdatePostRequest $request, Post $post)
     {
+        $post->loadCount('likes');
         return response()->json($post);
     }
 
@@ -103,5 +110,41 @@ class PostController extends Controller implements HasMiddleware
             'status' => 'success',
             'message' => 'Post Deleted Successfully!'
         ], 200);
+    }
+
+    public function like(Request $request, Post $post)
+    {
+        try {
+            Like::create([
+                'post_id' => $post->id,
+                'user_id' => $request->user()->id
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Post liked successfully'
+            ], 200);
+        } catch (\Throwable $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Post has already been liked'
+            ], 422);
+        }
+
+    }
+    public function unlike(Request $request, Post $post)
+    {
+        try {
+            $request->user()->likes()->where('post_id', $post->id)->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Post unliked successfully'
+            ], 200);
+        } catch (\Throwable $exception) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Post has already been unliked'
+            ], 422);
+        }
+
     }
 }
