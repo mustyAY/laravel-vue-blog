@@ -94,6 +94,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   props: ['id'],
 
@@ -109,7 +111,7 @@ export default {
 
   methods: {
     getPost() {
-      axios.get(`http://127.0.0.1:8000/api/posts/${this.id}`).then(({ data }) => {
+      axios.get(`/posts/${this.id}`).then(({ data }) => {
         console.log(data)
         this.post = data
       })
