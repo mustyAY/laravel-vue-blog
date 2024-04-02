@@ -87,9 +87,7 @@ export default {
   methods: {
     async getPosts() {
       try {
-        await axios.get('/sanctum/csrf-cookie', {
-          baseURL: 'http://127.0.0.1:8000'
-        });
+        
         const {data} = await axios.get('/posts');
         console.log(data.data)
         this.posts = data.data

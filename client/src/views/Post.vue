@@ -53,7 +53,7 @@
             {{ post.title }}
           </h1>
 
-          <div class="space-y-4 lg:text-lg leading-loose">
+          <div class="space-y-4 mb-6 lg:text-lg leading-loose">
             {{ post.body }}
           </div>
 
@@ -64,14 +64,22 @@
             <i class="fas fa-spinner text-blue-500 text-[60px] animate-spin"></i>
           </div>
 
-          <i
-            @click="likePost"
-            class="far fa-heart text-gray-500 text-2xl hover:cursor-pointer w-8"
-          ></i>
-          <i
-            @click="UnlikePost"
-            class="fas fa-heart text-pink-500 text-2xl hover:cursor-pointer w-8"
-          ></i>
+          <span 
+          v-if="!post.liked"
+          class="flex justify-center items-center hover:cursor-pointer  p-8 h-4 w-4 hover:bg-gray-200 rounded-full">
+            <i
+              @click="likePost"
+              class="far fa-heart text-gray-500 text-2xl"
+            ></i>
+          </span>
+          <span 
+          v-else
+          class="flex justify-center items-center hover:cursor-pointer p-8 h-4 w-4 hover:bg-gray-200 rounded-full">
+            <i
+              @click="UnlikePost"
+              class="fas fa-heart text-pink-500 text-2xl"
+            ></i>
+          </span>
           <section class="col-span-8 col-start-5 mt-10 space-y-6">
             <div class="space-x-2">
               <!-- <a href="#"
