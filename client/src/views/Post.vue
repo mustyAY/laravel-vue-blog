@@ -109,15 +109,23 @@ export default {
 
   data() {
     return {
-      post: {}
+      post: {},
+      user: null,
     }
   },
 
   mounted() {
+    this.getUser()
     this.getPost()
   },
 
   methods: {
+    getUser() {
+      axios.get(`/user`).then(({data}) => {
+        console.log(data)
+      })
+    },
+
     getPost() {
       axios.get(`/posts/${this.id}`).then(({ data }) => {
         console.log(data)
@@ -126,15 +134,15 @@ export default {
     },
 
     deletePost() {
-      axios.delete(`/api/posts/${this.id}`).then(({ data }) => (this.post = data))
+      axios.delete(`/posts/${this.id}`).then(({ data }) => (this.post = data))
     },
 
     likePost() {
-      axios.post(`/api/posts/${this.id}/like`).then(({ data }) => (this.post = data))
+      axios.post(`/posts/${this.id}/like`).then(({ data }) => (this.post.liked = true))
     },
 
     UnlikePost() {
-      axios.post(`/api/posts/${this.id}/unlike`).then(({ data }) => (this.post = data))
+      axios.post(`/posts/${this.id}/unlike`).then(({ data }) => (this.post.liked = false))
 
       // const heartIcon = document.querySelectorAll(".fa-heart")
       // heartIcon.forEach(icon => {
