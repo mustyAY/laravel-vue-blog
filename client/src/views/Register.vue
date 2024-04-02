@@ -101,7 +101,7 @@ export default {
             baseURL: "http://localhost:8000"
           }).then(({ data }) => {
             console.log(data)
-            router.push('/')
+            window.location = '/'
           })
           .catch(error => {
             if (error instanceof  AxiosError && error.response.status === 422) {

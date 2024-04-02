@@ -108,7 +108,8 @@ export default {
         status: this.status
       }).then(({ data }) => {
         console.log(data)
-        this.post = data
+        this.post = data;
+        window.location = '/';
       }).catch(error => {
         if (error instanceof  AxiosError && error.response.status === 422) {
           this.errors = error.response.data.errors

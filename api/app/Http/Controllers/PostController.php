@@ -125,10 +125,10 @@ class PostController extends Controller implements HasMiddleware
                 'post_id' => $post->id,
                 'user_id' => $request->user()->id
             ]);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Post liked successfully'
-            ], 200);
+            $post->refresh();
+            return response()->json(
+                $post,
+                 200);
         } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',
@@ -142,10 +142,10 @@ class PostController extends Controller implements HasMiddleware
     {
         try {
             $request->user()->likes()->where('post_id', $post->id)->delete();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Post unliked successfully'
-            ], 200);
+            $post->refresh();
+            return response()->json(
+                $post,
+                 200);
         } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',

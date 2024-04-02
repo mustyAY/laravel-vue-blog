@@ -18,7 +18,7 @@
 
 
         <!-- @if(auth()->user()->user_type_id === 1) -->
-        <router-link v-if="user"
+        <router-link v-if="user && user.role !== 'subscriber'"
                      :to="{ name: 'CreatePost' }"
                      id="create-job-button"
                      class="bg-blue-600 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5"
@@ -67,7 +67,7 @@
               </label>
 
               <input
-                id="email"
+                id="footer_email"
                 type="text"
                 placeholder="Your email address"
                 class="lg:bg-transparent py-2 lg:py-0 pl-4 focus-within:outline-none"

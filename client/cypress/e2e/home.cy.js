@@ -10,4 +10,5 @@ describe('Homepage Tests', () => {
     cy.visit('/')
     cy.get('[data-cy="posts"]').should('be.visible')
   })
+
 })

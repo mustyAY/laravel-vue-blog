@@ -11,7 +11,7 @@
 
           <div class="flex items-center lg:justify-center text-sm mt-4">
             <img
-              src="https://i.pravatar.cc/60?u={{ $job->lister->id }}"
+            :src="`https://i.pravatar.cc/60?u=${post.author?.id}`"
               class="rounded-xl"
               alt="Lary avatar"
             />
@@ -63,23 +63,30 @@
           >
             <i class="fas fa-spinner text-blue-500 text-[60px] animate-spin"></i>
           </div>
-
-          <span 
-          v-if="!post.liked"
-          class="flex justify-center items-center hover:cursor-pointer  p-8 h-4 w-4 hover:bg-gray-200 rounded-full">
-            <i
-              @click="likePost"
-              class="far fa-heart text-gray-500 text-2xl"
-            ></i>
-          </span>
-          <span 
-          v-else
-          class="flex justify-center items-center hover:cursor-pointer p-8 h-4 w-4 hover:bg-gray-200 rounded-full">
-            <i
-              @click="UnlikePost"
-              class="fas fa-heart text-pink-500 text-2xl"
-            ></i>
-          </span>
+          <div class="relative">
+            <span 
+            v-if="!post.liked"
+            class="flex justify-center items-center hover:cursor-pointer  p-8 h-4 w-4 hover:bg-gray-200 rounded-full">
+              <i
+                @click="likePost"
+                class="far fa-heart text-gray-500 text-2xl"
+              ></i>
+  
+            </span>
+            <span 
+            v-if="post.liked"
+            class="flex justify-center items-center hover:cursor-pointer p-8 h-4 w-4 hover:bg-gray-200 rounded-full">
+              <i
+                @click="UnlikePost"
+                class="fas fa-heart text-pink-500 text-2xl"
+              ></i>
+            </span>
+            <span v-show="post.likes_count > 0"
+              class="absolute left-[65px] top-[50%] -translate-y-1/2 text-gray-500"
+              >
+              {{ post.likes_count }}
+            </span>
+          </div>
           <section class="col-span-8 col-start-5 mt-10 space-y-6">
             <div class="space-x-2">
               <!-- <a href="#"
@@ -87,6 +94,8 @@
                                             style="font-size: 10px">Techniques</a> -->
 
               <button
+              v-if="user?.id === post?.user_id"
+              @click="deletePost"
                 type="submit"
                 class="px-3 py-1 border border-red-300 rounded-full text-red-300 text-xs uppercase font-semibold"
                 style="font-size: 10px"
@@ -123,6 +132,7 @@ export default {
     getUser() {
       axios.get(`/user`).then(({data}) => {
         console.log(data)
+        this.user = data;
       })
     },
 
@@ -134,22 +144,24 @@ export default {
     },
 
     deletePost() {
-      axios.delete(`/posts/${this.id}`).then(({ data }) => (this.post = data))
+      axios.delete(`/posts/${this.id}`).then(({ data }) => {
+        window.location = '/'
+      });
+      
     },
 
     likePost() {
-      axios.post(`/posts/${this.id}/like`).then(({ data }) => (this.post.liked = true))
+      axios.post(`/posts/${this.id}/like`).then(({ data }) => {
+        this.post = data;
+        this.post.liked = true;
+      })
     },
 
     UnlikePost() {
-      axios.post(`/posts/${this.id}/unlike`).then(({ data }) => (this.post.liked = false))
-
-      // const heartIcon = document.querySelectorAll(".fa-heart")
-      // heartIcon.forEach(icon => {
-      //     icon.onclick = function() {
-      //         this.parentNode.submit();
-      //     };
-      // });
+      axios.post(`/posts/${this.id}/unlike`).then(({ data }) => {
+        this.post = data;
+        this.post.liked = false;
+      })
     }
   }
 }

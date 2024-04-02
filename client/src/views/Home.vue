@@ -26,6 +26,7 @@
                 <div class="mt-4">
                   <h1 class="text-3xl">
                     <router-link
+                      :data-cy="post.id"
                       :to="{
                       name: 'Post',
                       params: { id: post.id }
@@ -47,7 +48,7 @@
               <footer class="flex justify-between items-center mt-8">
                 <div class="flex items-center text-sm">
                   <img
-                    src="https://i.pravatar.cc/60?u={{ post?.author.name }}"
+                    :src="`https://i.pravatar.cc/60?u=${post.author?.id}`"
                     class="rounded-xl"
                     alt="{{ post?.author.name }}"
                   />
