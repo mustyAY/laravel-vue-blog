@@ -60,6 +60,7 @@
 
 <script>
 import axios from 'axios';
+import router from '@/router/index.js'
 
 export default {
   data() {
@@ -68,7 +69,7 @@ export default {
       name: "",
       email: "",
       password: "",
-      password_confirmation: ""
+      password_confirmation: "",
       errors: {},
     }
   },
@@ -86,7 +87,10 @@ export default {
             password_confirmation: this.password_confirmation
           }, {
             baseURL: "http://localhost:8000"
-          }).then(({ data }) => console.log(data))
+          }).then(({ data }) => {
+            console.log(data)
+            router.push('/')
+          })
           .catch(error => console.log(error))
         }).catch(error => console.log(error))
 

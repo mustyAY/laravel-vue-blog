@@ -14,33 +14,33 @@
 
       <div class="mt-8 md:mt-0 flex items-center">
         <!-- @auth -->
-        <button class="text-xs font-bold uppercase">Username</button>
+        <button v-if="user" class="text-xs font-bold uppercase">{{ user?.name }}</button>
 
-        <form class="text-xs font-semibold text-blue-500 ml-4" action="/logout" method="POST">
-          <button type="submit">Log Out</button>
-        </form>
+
         <!-- @if(auth()->user()->user_type_id === 1) -->
-        <router-link
-          :to="{ name: 'CreatePost' }"
-          href="users/{{ /*auth()->id()*/ }}/jobs/create"
-          id="create-job-button"
-          class="bg-blue-600 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5"
+        <router-link v-if="user"
+                     :to="{ name: 'CreatePost' }"
+                     id="create-job-button"
+                     class="bg-blue-600 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5"
         >
           New Post
         </router-link>
+
+        <form v-if="user" @submit.prevent="logout" class="text-xs font-semibold text-blue-500 ml-4">
+          <button type="submit">Log Out</button>
+        </form>
         <!-- @endif -->
         <!-- @else -->
-        <router-link class="text-xs font-bold uppercase mx-4" :to="{ name: 'Register' }"
-          >Register</router-link
-        >
-        <router-link class="text-xs font-bold uppercase" :to="{ name: 'Login' }">Login</router-link>
+        <div v-else>
+          <router-link class="text-xs font-bold uppercase mx-4" :to="{ name: 'Register' }"
+          >Register
+          </router-link
+          >
+          <router-link class="text-xs font-bold uppercase" :to="{ name: 'Login' }">Login</router-link>
+
+        </div>
         <!-- @endauth               -->
-        <a
-          href="#"
-          class="bg-blue-500 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5"
-        >
-          Subscribe for updates
-        </a>
+
       </div>
     </nav>
 
@@ -86,3 +86,33 @@
     </footer>
   </section>
 </template>
+
+<script>
+import axios from 'axios'
+
+export default {
+
+  data() {
+    return {
+      user: null
+    }
+  },
+
+  mounted() {
+    this.getUser()
+  },
+
+  methods: {
+    getUser() {
+      axios.get(`/user`).then(({ data }) => {
+        this.user = data
+        console.log(data)
+      })
+    },
+
+    logout() {
+      axios.post(`/logout`, {}, {baseURL: 'http://localhost:8000'}).then(res => this.user = null)
+    }
+  }
+}
+</script>

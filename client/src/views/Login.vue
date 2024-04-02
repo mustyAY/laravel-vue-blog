@@ -48,6 +48,7 @@
 
 <script>
 import axios from 'axios'
+import router from '@/router/index.js'
 
 export default {
   data() {
@@ -63,10 +64,18 @@ export default {
 
   methods: {
     login() {
-      axios.post(`/login`, {
-        email: this.email,
-        password: this.password
-      }, {baseURL: 'http://localhost:8000'}).then(({ data }) => (this.user = data))
+      axios.get(`/sanctum/csrf-cookie`, { baseURL: "http://localhost:8000" })
+        .then(response => {
+          axios.post(`/login`, {
+            email: this.email,
+            password: this.password
+          }, {baseURL: 'http://localhost:8000'}).then(({ data }) => {
+            this.user = data
+            router.push('/')
+          })
+            .catch(error => console.log(error))
+        }).catch(error => console.log(error))
+
     }
   }
 }
