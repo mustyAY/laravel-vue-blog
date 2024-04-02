@@ -68,12 +68,12 @@ export default {
 
   methods: {
     login() {
-      axios.get(`/sanctum/csrf-cookie`, { baseURL: "http://127.0.0.1:8000" })
+      axios.get(`/sanctum/csrf-cookie`, { baseURL: "http://localhost:8000" })
         .then(response => {
           axios.post(`/login`, {
             email: this.email,
             password: this.password
-          }, {baseURL: 'http://127.0.0.1:8000'}).then(({ data }) => {
+          }, {baseURL: 'http://localhost:8000'}).then(({ data }) => {
             this.user = data
             window.location = '/'
           })
