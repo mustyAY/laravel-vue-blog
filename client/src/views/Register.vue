@@ -79,10 +79,10 @@ export default {
       axios.get(`/sanctum/csrf-cookie`, { baseURL: "http://localhost:8000" })
         .then(response => {
           axios.post(`/register`, {
-            name,
-            email,
-            password,
-            password_confirmation
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation
           }, {
             baseURL: "http://localhost:8000"
           }).then(({ data }) => console.log(data))
