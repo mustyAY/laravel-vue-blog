@@ -13,11 +13,9 @@
       </div>
 
       <div class="mt-8 md:mt-0 flex items-center">
-        <!-- @auth -->
         <button v-if="user" class="text-xs font-bold uppercase">{{ user?.name }}</button>
 
 
-        <!-- @if(auth()->user()->user_type_id === 1) -->
         <router-link v-if="user && user.role !== 'subscriber'"
                      :to="{ name: 'CreatePost' }"
                      id="create-job-button"
@@ -29,8 +27,7 @@
         <form v-if="user" @submit.prevent="logout" class="text-xs font-semibold text-blue-500 ml-4">
           <button type="submit">Log Out</button>
         </form>
-        <!-- @endif -->
-        <!-- @else -->
+        
         <div v-else>
           <router-link class="text-xs font-bold uppercase mx-4" :to="{ name: 'Register' }"
           >Register
@@ -39,7 +36,6 @@
           <router-link class="text-xs font-bold uppercase" :to="{ name: 'Login' }">Login</router-link>
 
         </div>
-        <!-- @endauth               -->
 
       </div>
     </nav>
@@ -107,7 +103,7 @@ export default {
       axios.get(`/user`).then(({ data }) => {
         this.user = data
         console.log(data)
-      })
+      }).catch(error => console.log(error))
     },
 
     logout() {
