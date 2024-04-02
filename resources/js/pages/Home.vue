@@ -36,7 +36,7 @@
             </header>
 
             <div class="text-sm mt-2">
-              {{ post.body.length <= 100 ? post.body : post.body.substr(0, 100) + '...' }}
+              {{ post?.description }}
             </div>
 
             <footer class="flex justify-between items-center mt-8">
@@ -44,7 +44,7 @@
                 <img src="https://i.pravatar.cc/60?u={{ $job->lister->id }}" class="rounded-xl" alt="Lary avatar">
                 <a href="/users/{{ $job->lister->id }}">
                   <div class="ml-3">
-                    <h5 class="font-bold">Name</h5>
+                    <h5 class="font-bold">{{ post?.author.name }}</h5>
                   </div>
                 </a>
               </div>
@@ -75,7 +75,10 @@ export default {
   },
   methods: {
     getPosts() {
-      axios.get("https://jsonplaceholder.typicode.com/posts").then(({ data }) => this.posts = data);
+      axios.get("http://127.0.0.1:8000/api/posts").then(({ data }) => {
+        console.log(data.data);
+        this.posts = data.data;
+      });
     }
   }
 }

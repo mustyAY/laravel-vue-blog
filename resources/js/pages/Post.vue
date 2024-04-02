@@ -15,7 +15,7 @@
                             alt="Lary avatar">
                         <a href="/users/{{ $job->lister->id }}">
                             <div class="ml-3 text-left">
-                                <h5 class="font-bold">Name</h5>
+                                <h5 class="font-bold">{{ post.author?.name }}</h5>
                                 <!-- <h6>Lister on WorkLet</h6> -->
                             </div>
                         </a>
@@ -54,29 +54,23 @@
                         <i class="fas fa-spinner text-blue-500 text-[60px] animate-spin"></i>
                     </div>
 
-                    <form class="flex flex-col mt-6" method="POST" :action="`/api/posts/${id}/like`" enctype="multipart/form-data">
                         <i 
-                        @click="likeOrUnlikePost"
+                        @click="likePost"
                         class="far fa-heart  text-gray-500 text-2xl hover:cursor-pointer w-8"></i>
-                    </form>
-                    <form class="flex flex-col mt-6" method="POST" :action="`/api/posts/${id}/unlike`" enctype="multipart/form-data">
                         <i 
-                        @click="likeOrUnlikePost"
+                        @click="UnlikePost"
                         class="fas fa-heart text-pink-500 text-2xl hover:cursor-pointer w-8"></i>
-                    </form>
                     <section class="col-span-8 col-start-5 mt-10 space-y-6">
                         <div class="space-x-2">
                             <!-- <a href="#"
                                             class="px-3 py-1 border border-blue-300 rounded-full text-blue-300 text-xs uppercase font-semibold"
                                             style="font-size: 10px">Techniques</a> -->
-                            <form method="POST" :action="`/api/posts/${id}`">
 
                                 <button type="submit"
                                     class="px-3 py-1 border border-red-300 rounded-full text-red-300 text-xs uppercase font-semibold"
                                     style="font-size: 10px">
                                     Delete Post
                                 </button>
-                            </form>
                         </div>
                     </section>
                 </div>
@@ -101,15 +95,22 @@ export default {
 
     methods: {
         getPost(){
-            axios.get(`https://jsonplaceholder.typicode.com/posts/${this.id}`).then(({ data }) => this.post = data);
+            axios.get(`http://127.0.0.1:8000/api/posts/${this.id}`).then(({ data }) => {
+                console.log(data);
+                this.post = data
+            });
         },
 
         deletePost(){
             axios.delete(`/api/posts/${this.id}`).then(({ data }) => this.post = data);
         },
 
-        likeOrUnlikePost(){
+        likePost(){
             axios.post(`/api/posts/${this.id}/like`).then(({ data }) => this.post = data);
+        },
+
+        UnlikePost(){
+            axios.post(`/api/posts/${this.id}/unlike`).then(({ data }) => this.post = data);
 
             // const heartIcon = document.querySelectorAll(".fa-heart")
             // heartIcon.forEach(icon => {
