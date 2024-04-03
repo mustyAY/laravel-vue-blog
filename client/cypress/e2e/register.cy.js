@@ -6,8 +6,8 @@ describe('Register tests', () => {
 
   it('registers successfully', () => {
     cy.visit('/register')
-    cy.get('#name').type('John Doe')
-    cy.get('#email').type('john@example.com')
+    cy.get('#name').type('Jack Doe')
+    cy.get('#email').type('jack@example.com')
     cy.get('#password').type('password')
     cy.get('#password_confirmation').type('password')
     cy.contains('button', 'Submit').click()

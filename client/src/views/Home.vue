@@ -52,11 +52,9 @@
                     class="rounded-xl"
                     alt="{{ post?.author.name }}"
                   />
-                  <a href="/users/{{ /*$job->lister->id*/ }}">
                     <div class="ml-3">
                       <h5 class="font-bold">{{ post?.author.name }}</h5>
                     </div>
-                  </a>
                 </div>
               </footer>
             </div>

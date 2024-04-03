@@ -6,7 +6,7 @@
           <img src="./images/illustration-1.png" alt="" class="rounded-xl" />
 
           <p class="mt-4 block text-gray-400 text-xs">
-            <!-- Published <time>{{ $job->created_at->diffForHumans() }}</time> -->
+            <!-- Published <time>{{ formatDate(post.created_at) }}</time> -->
           </p>
 
           <div class="flex items-center lg:justify-center text-sm mt-4">
@@ -15,12 +15,10 @@
               class="rounded-xl"
               alt="Lary avatar"
             />
-            <a href="/users/{{ $job->lister->id }}">
+          
               <div class="ml-3 text-left">
                 <h5 class="font-bold">{{ post.author?.name }}</h5>
-                <!-- <h6>Lister on WorkLet</h6> -->
               </div>
-            </a>
           </div>
         </div>
 
@@ -89,10 +87,7 @@
           </div>
           <section class="col-span-8 col-start-5 mt-10 space-y-6">
             <div class="space-x-2">
-              <!-- <a href="#"
-                                            class="px-3 py-1 border border-blue-300 rounded-full text-blue-300 text-xs uppercase font-semibold"
-                                            style="font-size: 10px">Techniques</a> -->
-
+              
               <button
               v-if="user?.id === post?.user_id"
               @click="deletePost"
@@ -162,7 +157,13 @@ export default {
         this.post = data;
         this.post.liked = false;
       })
-    }
+    },
+
+    // formatDate(dateString) {
+    //         const date = dayjs(dateString);
+    //             // Then specify how you want your dates to be formatted
+    //         return date.format('dddd MMMM D, YYYY');
+    //     }
   }
 }
 </script>

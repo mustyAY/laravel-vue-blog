@@ -12,7 +12,7 @@ describe('Login tests', () => {
     cy.contains('h1', 'Blog Posts')
   })
 
-  it.only('display errors for failed log in', () => {
+  it('display errors for failed log in', () => {
     cy.visit('/login')
     cy.get('#email').type('author1@example.com')
     cy.get('#password').type('password1')
