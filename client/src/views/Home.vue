@@ -68,6 +68,15 @@
     >
       <i class="fas fa-spinner text-blue-500 text-[60px] animate-spin"></i>
     </div>
+    <div class="flex justify-center items-center m-12">
+      <a 
+        @click="changePage(link)"
+        :class="`py-[6px] px-[16px] hover:text-white hover:bg-blue-500
+        ${link.active ? 'bg-blue-500 text-white' : ''} ${!link.url? 'pointer-events-none' : ''}`"
+        href="#" v-for="(link, index) in links" :key="index" v-html="link.label"
+      >
+      </a>
+    </div>
   </section>
 </template>
 
@@ -77,7 +86,8 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      posts: []
+      posts: [],
+      links:[]
     }
   },
   mounted() {
@@ -88,12 +98,26 @@ export default {
       try {
         
         const {data} = await axios.get('/posts');
+        console.log(data)
         console.log(data.data)
+        this.links = data.links
         this.posts = data.data
       } catch (e) {
         console.log(e)
       }
+    },
+
+    changePage(link){
+      if(!link.url || link.active){
+        return;
+      }
+        axios.get(link.url).then(({data}) => {
+          this.posts = data.data
+          this.links = data.links
+        })
+        .catch(error => console.log(error));
     }
+ 
   }
 }
 </script>
