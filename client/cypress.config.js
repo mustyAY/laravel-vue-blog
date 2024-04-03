@@ -5,6 +5,7 @@ export default defineConfig({
     specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,jsx,ts,tsx}',
     baseUrl: 'http://localhost:3000',
     chromeWebSecurity: false,
+    watchForFileChanges: false,
   },
   component: {
     specPattern: 'src/**/__tests__/*.{cy,spec}.{js,ts,jsx,tsx}',

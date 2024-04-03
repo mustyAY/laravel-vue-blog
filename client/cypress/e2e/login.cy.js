@@ -1,4 +1,7 @@
 describe('Login tests', () => {
+  before(() => {
+    cy.refreshDatabase()
+  })
   it('visits the login page', () => {
     cy.visit('/login')
     cy.contains('h1', 'Log In!')
@@ -12,7 +15,7 @@ describe('Login tests', () => {
     cy.contains('h1', 'Blog Posts')
   })
 
-  it.only('display errors for failed log in', () => {
+  it('display errors for failed log in', () => {
     cy.visit('/login')
     cy.get('#email').type('author1@example.com')
     cy.get('#password').type('password1')
