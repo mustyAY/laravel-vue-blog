@@ -5,6 +5,7 @@ import Post from '../views/Post.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import CreatePost from '../views/CreatePost.vue'
+import RefreshDatabase from '@/views/RefreshDatabase.vue'
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     path: '/create-post',
     name: 'CreatePost',
     component: CreatePost
+  },
+  {
+    path: '/__cypress__/refresh_database',
+    name: 'RefreshDatabase',
+    component: RefreshDatabase
   }
   // {
   //     path: "/blog/:slug",

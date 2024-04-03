@@ -25,5 +25,8 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('refreshDatabase', () => {
-  return cy.request('/api/__cypress__/refresh_database')
+  cy.visit('/__cypress__/refresh_database').contains('h1', 'Refresh DB')
+  cy.intercept('http://localhost:8000/api/__cypress__/refresh_database').as('refreshDB')
+  cy.wait('@refreshDB')
+  return cy.contains('h1', 'Blog Posts')
 })
