@@ -7,7 +7,7 @@ const formData = reactive({
   title: '',
   description: '',
   body: '',
-  status: '',
+  status: 'draft',
   photo: ''
 })
 const errors = ref(null)
@@ -134,7 +134,7 @@ function addPhoto(event) {
             name="status"
           >
             <option value="draft">Save as draft</option>
-            <option value="published">Publish</option>
+            <option selected value="published">Publish</option>
           </select>
           <ul v-if="errors?.status" class="mt-2 space-y-1 text-sm text-red-600">
             <li v-for="(error, index) in errors.status" :key="index">

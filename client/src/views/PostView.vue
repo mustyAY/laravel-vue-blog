@@ -53,7 +53,7 @@ async function UnlikePost() {
         <div class="col-span-4 mb-10 lg:pt-14 lg:text-center">
           <img
             :alt="post?.title"
-            :src="post.photo ?? 'https://placehold.co/600x400'"
+            :src="post?.photo ?? 'https://placehold.co/600x400'"
             class="rounded-xl"
           />
 

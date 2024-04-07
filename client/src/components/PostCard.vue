@@ -8,6 +8,7 @@ defineProps(['posts'])
     :key="post.id"
     :data-cy-posts="post.id"
     class="flex flex-col justify-between p-2"
+    data-cy="posts"
   >
     <header>
       <div>
