@@ -55,7 +55,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function store(StorePostRequest $request): JsonResponse
     {
-        $photo = $request->file('photo')?->storePublicly('post-pictures');
+        $photo = $request->file('photo')?->storePublicly('/post-pictures');
 
         $post = new Post($request->safe()->all());
         $post->photo_path = $photo;
@@ -80,7 +80,6 @@ class PostController extends Controller implements HasMiddleware
             $liked = $request->user()->likes()->where('post_id', $post->id)->exists();
             $post->setAttribute('liked', $liked);
         }
-
         return response()->json($post);
     }
 
@@ -94,7 +93,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function update(UpdatePostRequest $request, Post $post): JsonResponse
     {
-        $photo = $request->file('photo')?->storePublicly('post-pictures');
+        $photo = $request->file('photo')?->storePublicly('/post-pictures');
         $oldPhotoPath = $post->photo_path;
         if ($photo) {
             Storage::delete($oldPhotoPath);
@@ -111,6 +110,10 @@ class PostController extends Controller implements HasMiddleware
      */
     public function destroy(UpdatePostRequest $request, Post $post): JsonResponse
     {
+
+        if ($post->photo_path) {
+            Storage::disk('app')->delete($post->photo_path);
+        }
         $post->delete();
         return response()->json([
             'status' => 'success',
