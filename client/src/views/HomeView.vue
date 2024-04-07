@@ -2,19 +2,21 @@
 import axios from 'axios'
 import PostCard from '@/components/PostCard.vue'
 import { onBeforeMount, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const posts = ref([])
 const links = ref([])
 const errors = ref([])
 const loadingPosts = ref(true)
-const query = ref(null)
+const page = ref(1)
 let blog
+const router = useRouter()
 const route = useRoute()
 
-async function getPosts() {
+async function getPosts(page) {
+  const url = parseInt(page) > 1 ? `/posts/?page=${page}` : '/posts'
   try {
-    const { data } = await axios.get('/posts')
+    const { data } = await axios.get(url)
     links.value = data.links
     posts.value = data.data
     loadingPosts.value = false
@@ -31,6 +33,12 @@ async function changePage(link) {
     const { data } = await axios.get(link.url)
     links.value = data.links
     posts.value = data.data
+    page.value = data.current_page
+    await router.push({
+      query: {
+        page: page.value > 1 ? page.value : undefined
+      }
+    })
     blog.scrollIntoView({
       behavior: 'smooth'
     })
@@ -40,7 +48,8 @@ async function changePage(link) {
 }
 
 onBeforeMount(async () => {
-  await getPosts()
+  page.value = route.query.page ?? page.value
+  await getPosts(page.value)
 })
 </script>
 
