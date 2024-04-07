@@ -128,7 +128,7 @@ class PostController extends Controller implements HasMiddleware
             $post->refresh();
             return response()->json(
                 $post,
-                 200);
+                200);
         } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',
@@ -145,7 +145,7 @@ class PostController extends Controller implements HasMiddleware
             $post->refresh();
             return response()->json(
                 $post,
-                 200);
+                200);
         } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',
