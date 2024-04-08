@@ -16,5 +16,8 @@ describe('Login tests', () => {
     cy.contains('li', 'These credentials do not match our records.')
   })
 
+  it.only('logs out successfully', () => {
+    cy.login().click()
+    cy.contains('a', 'Login')
+  })
 })
-  

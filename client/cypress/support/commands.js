@@ -33,9 +33,9 @@ Cypress.Commands.add('refreshDatabase', () => {
 Cypress.Commands.add('login', (role = null) => {
   // if (!role) role = 'subscriber'
   role ??= 'subscriber'
-  let email;
+  let email
   const subscriber = 'subscriber@example.com'
-  const author = 'author@example.com'
+  const author = 'author1@example.com'
   const admin = 'admin@example.com'
 
   switch (role) {
@@ -61,5 +61,5 @@ Cypress.Commands.add('login', (role = null) => {
   cy.intercept('http://localhost:8000/api/user').as('getUser')
   cy.wait('@getUser')
   cy.contains('h1', 'Blog Posts')
-  cy.contains('button', 'Log Out')
+  return cy.contains('button', 'Log Out')
 })

@@ -33,7 +33,7 @@ class PostController extends Controller implements HasMiddleware
         $post = Post::select(['id', 'user_id', 'title', 'slug', 'description', 'status', 'photo_path'])
             ->withCount('likes')
             ->where('status', 'published')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
             ->paginate(10);
 
         return response()->json($post);
@@ -128,7 +128,7 @@ class PostController extends Controller implements HasMiddleware
             $post->refresh();
             return response()->json(
                 $post,
-                 200);
+                200);
         } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',
@@ -145,7 +145,7 @@ class PostController extends Controller implements HasMiddleware
             $post->refresh();
             return response()->json(
                 $post,
-                 200);
+                200);
         } catch (Throwable $exception) {
             return response()->json([
                 'status' => 'error',
