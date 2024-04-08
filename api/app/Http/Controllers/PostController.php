@@ -33,7 +33,7 @@ class PostController extends Controller implements HasMiddleware
         $post = Post::select(['id', 'user_id', 'title', 'slug', 'description', 'status', 'photo_path'])
             ->withCount('likes')
             ->where('status', 'published')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
             ->paginate(10);
 
         return response()->json($post);

@@ -1,4 +1,8 @@
 describe('Register tests', () => {
+  before(() => {
+    cy.refreshDatabase()
+  })
+
   it('visits the register page', () => {
     cy.visit('/register')
     cy.contains('h1', 'Register!')
@@ -11,7 +15,10 @@ describe('Register tests', () => {
     cy.get('#password').type('password')
     cy.get('#password_confirmation').type('password')
     cy.contains('button', 'Submit').click()
+    cy.intercept('http://localhost:8000/api/user').as('getUser')
+    cy.wait('@getUser')
     cy.contains('h1', 'Blog Posts')
+    cy.contains('button', 'Log Out')
   })
 
   it('display errors for failed registration', () => {

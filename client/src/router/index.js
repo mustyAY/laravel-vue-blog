@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import RefreshDatabase from '@/views/RefreshDatabase.vue'
 import Home from '../views/HomeView.vue'
 import Post from '../views/PostView.vue'
 import Register from '../views/RegisterView.vue'
@@ -32,6 +33,11 @@ const routes = [
     path: '/create-post',
     name: 'CreatePost',
     component: CreatePost
+  },
+  {
+    path: '/__cypress__/refresh_database',
+    name: 'RefreshDatabase',
+    component: RefreshDatabase
   }
 ]
 

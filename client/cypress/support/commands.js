@@ -23,3 +23,43 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('refreshDatabase', () => {
+  cy.visit('/__cypress__/refresh_database').contains('h1', 'Refresh DB')
+  cy.intercept('http://localhost:8000/api/__cypress__/refresh_database').as('refreshDB')
+  cy.wait('@refreshDB')
+})
+
+Cypress.Commands.add('login', (role = null) => {
+  // if (!role) role = 'subscriber'
+  role ??= 'subscriber'
+  let email
+  const subscriber = 'subscriber@example.com'
+  const author = 'author1@example.com'
+  const admin = 'admin@example.com'
+
+  switch (role) {
+    case 'author': {
+      email = author
+      break
+    }
+
+    case 'admin': {
+      email = admin
+      break
+    }
+
+    default: {
+      email = subscriber
+    }
+  }
+
+  cy.visit('/login')
+  cy.get('#email').type(email)
+  cy.get('#password').type('password')
+  cy.contains('button', 'Log In').click()
+  cy.intercept('http://localhost:8000/api/user').as('getUser')
+  cy.wait('@getUser')
+  cy.contains('h1', 'Blog Posts')
+  return cy.contains('button', 'Log Out')
+})

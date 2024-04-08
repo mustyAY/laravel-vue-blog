@@ -5,11 +5,7 @@ describe('Login tests', () => {
   })
 
   it('logs in successfully', () => {
-    cy.visit('/login')
-    cy.get('#email').type('author1@example.com')
-    cy.get('#password').type('password')
-    cy.contains('button', 'Log In').click()
-    cy.contains('h1', 'Blog Posts')
+    cy.login()
   })
 
   it('display errors for failed log in', () => {
@@ -20,5 +16,8 @@ describe('Login tests', () => {
     cy.contains('li', 'These credentials do not match our records.')
   })
 
+  it.only('logs out successfully', () => {
+    cy.login().click()
+    cy.contains('a', 'Login')
+  })
 })
-  
