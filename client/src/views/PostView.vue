@@ -136,7 +136,7 @@ async function UnlikePost() {
           <section class="col-span-8 col-start-5 mt-10 space-y-6">
             <div class="space-x-2">
               <button
-                v-if="user?.id === post?.user_id"
+                v-if="user?.id === post?.user_id || user?.role === 'admin'"
                 class="rounded-full border border-red-300 px-3 py-1 text-xs font-semibold uppercase text-red-300"
                 style="font-size: 10px"
                 type="submit"
