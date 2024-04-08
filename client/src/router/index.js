@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Home from '../views/Home.vue'
-import Post from '../views/Post.vue'
-import Register from '../views/Register.vue'
-import Login from '../views/Login.vue'
-import CreatePost from '../views/CreatePost.vue'
 import RefreshDatabase from '@/views/RefreshDatabase.vue'
+import Home from '../views/HomeView.vue'
+import Post from '../views/PostView.vue'
+import Register from '../views/RegisterView.vue'
+import Login from '../views/LoginView.vue'
+import CreatePost from '../views/CreatePostView.vue'
 
 const routes = [
   {
@@ -39,12 +39,6 @@ const routes = [
     name: 'RefreshDatabase',
     component: RefreshDatabase
   }
-  // {
-  //     path: "/blog/:slug",
-  //     name: "SingleBlog",
-  //     component: SingleBlog,
-  //     props: true,
-  // },
 ]
 
 const router = createRouter({

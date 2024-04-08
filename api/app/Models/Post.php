@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,13 +12,15 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-      'title',
-      'slug',
-      'description',
-      'body',
-      'photo_path',
-      'status',
+        'title',
+        'slug',
+        'description',
+        'body',
+        'photo_path',
+        'status',
     ];
+
+    protected $appends = ['photo'];
 
     protected $with = ['author:id,name'];
     protected $withCount = ['likes'];
@@ -36,4 +39,15 @@ class Post extends Model
     {
         return $this->belongsToMany(User::class, Like::class);
     }
+
+    public function photo(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->photo_path) return null;
+                return asset($this->photo_path);
+            },
+        );
+    }
+
 }
