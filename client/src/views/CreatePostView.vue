@@ -1,8 +1,9 @@
 <script setup>
 import axios, { AxiosError } from 'axios'
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-// const user = ref(null)
+const router = useRouter()
 const formData = reactive({
   title: '',
   description: '',
@@ -24,7 +25,7 @@ async function createPost() {
         'Content-Type': 'multipart/form-data'
       }
     })
-    window.location = '/'
+    await router.push('/')
   } catch (error) {
     if (error instanceof AxiosError && error.response.status === 422) {
       errors.value = error.response.data.errors
@@ -133,8 +134,8 @@ function addPhoto(event) {
             class="w-full border border-gray-400 p-2"
             name="status"
           >
-            <option value="draft">Save as draft</option>
-            <option selected value="published">Publish</option>
+            <option selected value="draft">Save as draft</option>
+            <option value="published">Publish</option>
           </select>
           <ul v-if="errors?.status" class="mt-2 space-y-1 text-sm text-red-600">
             <li v-for="(error, index) in errors.status" :key="index">

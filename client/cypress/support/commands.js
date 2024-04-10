@@ -59,7 +59,7 @@ Cypress.Commands.add('login', (role = null) => {
   cy.get('#password').type('password')
   cy.contains('button', 'Log In').click()
   cy.intercept('http://localhost:8000/api/user').as('getUser')
-  cy.wait('@getUser')
   cy.contains('h1', 'Blog Posts')
+  cy.wait('@getUser')
   return cy.contains('button', 'Log Out')
 })

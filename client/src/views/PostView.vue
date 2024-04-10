@@ -1,31 +1,20 @@
 <script setup>
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { onBeforeMount, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth.js'
 
 const { id } = defineProps(['id'])
+const authStore = useAuthStore()
 
 const post = ref(null)
-const user = ref(null)
 
 async function getPost() {
   const { data } = await axios.get(`/posts/${id}`)
   post.value = data
 }
 
-async function getUser() {
-  try {
-    const { data } = await axios.get('/user')
-    user.value = data
-  } catch (error) {
-    if (error instanceof AxiosError && error.response.status === 401) {
-      window.location = '/login'
-    }
-  }
-}
-
 onBeforeMount(async () => {
   await getPost()
-  await getUser()
 })
 
 async function deletePost() {
@@ -136,7 +125,7 @@ async function UnlikePost() {
           <section class="col-span-8 col-start-5 mt-10 space-y-6">
             <div class="space-x-2">
               <button
-                v-if="user?.id === post?.user_id || user?.role === 'admin'"
+                v-if="authStore.canModifyPost(post) || authStore.isAdmin"
                 class="rounded-full border border-red-300 px-3 py-1 text-xs font-semibold uppercase text-red-300"
                 style="font-size: 10px"
                 type="submit"

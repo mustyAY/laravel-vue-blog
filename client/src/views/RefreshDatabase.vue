@@ -10,7 +10,7 @@ export default {
   },
 
   methods: {
-    async refreshDB () {
+    async refreshDB() {
       await axios.get('/__cypress__/refresh_database')
       await router.push('/')
     }
@@ -22,6 +22,4 @@ export default {
   <h1>Refresh DB</h1>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
