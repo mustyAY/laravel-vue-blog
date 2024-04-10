@@ -12,7 +12,9 @@ describe('post tests', () => {
 
   it('can like post', () => {
     cy.login()
+    cy.intercept('http://localhost:8000/api/posts/33').as('getPost')
     cy.get('[data-cy="33"]').click()
+    cy.wait('@getPost')
     cy.intercept('http://localhost:8000/api/posts/33/like').as('likePost')
     cy.url().should('include', '33')
     cy.get('i.far.fa-heart').parent('span').click()

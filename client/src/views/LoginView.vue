@@ -1,25 +1,16 @@
 <script setup>
-import axios, { AxiosError } from 'axios'
 import { reactive, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth.js'
 
-// const user = ref(null)
+const authStore = useAuthStore()
 const formData = reactive({
   email: '',
   password: ''
 })
 const errors = ref(null)
 
-async function login() {
-  await axios.get('sanctum/csrf-cookie', { baseURL: 'http://localhost:8000' })
-  try {
-    await axios.post('login', formData, { baseURL: 'http://localhost:8000' })
-    window.location = '/'
-  } catch (error) {
-    if (error instanceof AxiosError && error.response.status === 422) {
-      errors.value = error.response.data.errors
-      formData.password = ''
-    }
-  }
+const handleLogin = async () => {
+  errors.value = await authStore.login(formData)
 }
 </script>
 
@@ -27,7 +18,7 @@ async function login() {
   <section class="px-6 py-8">
     <main class="mx-auto mt-10 max-w-lg rounded-xl border-gray-200 bg-gray-100 p-6">
       <h1 class="text-center text-xl font-bold">Log In!</h1>
-      <form class="mt-10" @submit.prevent="login">
+      <form class="mt-10" @submit.prevent="handleLogin">
         <div class="mb-6">
           <label class="mb-2 block text-xs font-bold uppercase text-gray-700" for="email">
             Email

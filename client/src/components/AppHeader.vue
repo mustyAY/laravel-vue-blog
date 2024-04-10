@@ -1,35 +1,7 @@
 <script setup>
-import axios, { AxiosError } from 'axios'
-import { onBeforeMount, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth.js'
 
-const user = ref(null)
-
-async function getUser() {
-  try {
-    const { data } = await axios.get('/user')
-    user.value = data
-  } catch (error) {
-    if (error instanceof AxiosError && error.response.status === 401) {
-      await logout()
-    }
-  }
-}
-
-async function logout() {
-  if (!user.value) return
-  await axios.post(
-    '/logout',
-    {},
-    {
-      baseURL: 'http://localhost:8000'
-    }
-  )
-  user.value = null
-}
-
-onBeforeMount(async () => {
-  await getUser()
-})
+const authStore = useAuthStore()
 </script>
 
 <template>
@@ -48,10 +20,10 @@ onBeforeMount(async () => {
       </div>
 
       <div class="mt-8 flex items-center md:mt-0">
-        <button v-if="user" class="text-xs font-bold">{{ user?.name }}</button>
+        <button v-if="authStore.user" class="text-xs font-bold">{{ authStore.user?.name }}</button>
 
         <RouterLink
-          v-if="user && user.role !== 'subscriber'"
+          v-if="authStore.user && authStore.canCreatePost"
           id="create-job-button"
           :to="{ name: 'CreatePost' }"
           class="ml-3 rounded-full bg-blue-600 px-5 py-3 text-xs font-semibold text-white"
@@ -59,7 +31,11 @@ onBeforeMount(async () => {
           New Post
         </RouterLink>
 
-        <form v-if="user" class="ml-4 text-xs font-semibold text-blue-500" @submit.prevent="logout">
+        <form
+          v-if="authStore.user"
+          class="ml-4 text-xs font-semibold text-blue-500"
+          @submit.prevent="authStore.logout"
+        >
           <button type="submit">Log Out</button>
         </form>
 
